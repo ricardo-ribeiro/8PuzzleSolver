@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+    <nav class="navbar navbar-default">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Puzzle Solver</a>
+        </div>
+    </nav>
+    <div class="alert alert-danger" id="puzzle_error_message" style="display:none;">
+        <strong>Error!</strong> The provided puzzle is unsolvable
+    </div>
+
+
+    <div class="form">
+        <div class="form-group">
+            <label for="puzzle_to_compute">Puzzle: </label>
+            <input class="form-control" id="puzzle_to_compute" type="text" placeholder="8,7,6,1,0,5,2,3,4">
+
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="mh"> Manhattan
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="nl"> Nielson's
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="out"> Out Of Row out of Column
+            </label>
+
+            <button class="btn btn-warning btn-lg" id="load"  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Computing">Solve Puzzle</button>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="jumbotron">
+    <div class="main">
+        <canvas id="puzzle" width="300px" height="300px"></canvas>
+    </div>
+    </div>
+
+
+
+<div id="result"></div>
+    <div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#results_list">Show Steps</a>
+      </h4>
+    </div>
+    <div id="results_list" class="panel-collapse collapse">
+      <ul class="list-group">
+        <li class="list-group-item">One</li>
+        <li class="list-group-item">Two</li>
+        <li class="list-group-item">Three</li>
+      </ul>
+      <div class="panel-footer">Footer</div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<script>
+var computed_data ;
+$('.btn').on('click', function() {
+    var $this = $(this);
+  $this.button('loading');
+  $.ajax({
+    url: "/api/" + $("#puzzle_to_compute").val() +"/"+ $( "input:checked" ).val(),
+    context: document.body
+    ,statusCode: {
+    404: function() {
+      $this.button('reset');
+      $("#puzzle_error_message").show("slow", function(){
+            setTimeout(function(){ $("#puzzle_error_message").hide("slow") }, 3000);
+      });
+
+    }}
+  }).done(function(data) {
+        computed_data = data;
+        display_computed_results(data);
+    $this.button('reset');
+    });
+
+});
+
+
+
+</script>
+<script src="static/ocanvas.js"></script>
+<script src="static/functions.js"></script>
+</body>
+</html>
