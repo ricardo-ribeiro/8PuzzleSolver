@@ -14,7 +14,7 @@ __author__ = 'ricardo'
 
 GOALSTATE = [[1,2,3],[8,0,4],[7,6,5]]
 
-INITIALSTATE = [[0,7,6],[8,2,4],[5,1,3]]
+INITIALSTATE = [[6,0,3],[8,2,7],[5,4,1]]
 
 # Purposed Boards
 #
@@ -40,17 +40,17 @@ oth = Other(mh,nl,out,GOALSTATE)
 lc = LinearConflict(GOALSTATE,mh)
 mt = MisplacedTiles(GOALSTATE)
 
-HEURISTIC = oth
+HEURISTIC =mh
 
 
 # Print 8Puzzle Logo
 logo()
 # Create Object Astar Parsing the Heuristic Object the Initial State the Goal State and the Optimal variable
-ast = AStar_t(HEURISTIC,INITIALSTATE,GOALSTATE,True)
+ast = AStar_t(HEURISTIC,INITIALSTATE,GOALSTATE,False)
 # The Viz Object provides diferrent display method for the rusult
 # Create a visualize Object parsing the return value of the ast.execute method
 viz = visualize(ast.execute())
 
 # View Horizontal Board
-viz.view_boardH()
+viz.view_node_tree()
 
